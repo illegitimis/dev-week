@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+    <form name="form1" method="post" enctype="multipart/form-data" action="http://localhost:5000/api/my/persist">
+        <!--
+        <div>
+            <label for="caption">Image Caption</label>
+            <input name="caption" type="text" />
+        </div>
+        -->
+        <p>Input attribute name should match controller action parameter.</p>
+        <div>
+            <label for="zip">Zip File 2 Persist</label>
+            <input name="zipFormFile" type="file" width="400" />
+        </div>
+        <div>
+            <input type="submit" value="Submit" />
+        </div>
+    </form>
+
+    <form name="form2" method="post" enctype="multipart/form-data" action="http://localhost:5000/dev-week/upload">
+        <p>Upload test with locally hosted netcore web api</p>
+        <div>
+            <label for="zip">Zip File</label>
+            <input name="zipFormFile" type="file" width="400" />
+        </div>
+        <div>
+            <input type="submit" value="Submit" />
+        </div>
+    </form>
+
+    <form name="form3" method="post" enctype="multipart/form-data" action="http://192.168.164.18:9000/stockExchangeDemo">
+        <p>
+            The application that we will use to test your endpoint is hosted at the following address and you may use it during development to validate your solution:
+        </p>
+        <div>
+            <label for="file">Zip File</label>
+            <input name="file" type="file" style="width: 400px" />
+        </div>
+        <div>
+            <input type="submit" value="Submit Test" />
+        </div>
+    </form>    
+
+</body>
+</html>
+
