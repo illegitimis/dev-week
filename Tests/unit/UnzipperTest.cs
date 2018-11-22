@@ -1,4 +1,4 @@
-﻿namespace Tests
+﻿namespace Tests.Unit
 {
     using DevWeek.Algo;
     using System.Linq;
@@ -10,7 +10,7 @@
         [Fact]
         public void GetFileMetadataTest()
         {
-            var unzip = new Unzipper(null);
+            var unzip = new Unzipper(null, null, null);
             var results = unzip.GetMetadata(InputsZipFileName).ToArray();
             Assert.Equal(2, results.Length);
             Assert.Equal(FileNameTenTicks, results[0].name);

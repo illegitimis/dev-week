@@ -6,46 +6,53 @@
 </head>
 <body>
 
-    <form name="form1" method="post" enctype="multipart/form-data" action="http://localhost:5000/api/my/persist">
-        <!--
+    <p>Upload test with locally hosted netcore web api</p>
+    <p>Input attribute name should match controller action parameter.</p>
+    <form name="form2" method="post" enctype="multipart/form-data" action="http://localhost:5000/upload">
         <div>
-            <label for="caption">Image Caption</label>
-            <input name="caption" type="text" />
-        </div>
-        -->
-        <p>Input attribute name should match controller action parameter.</p>
-        <div>
-            <label for="zip">Zip File 2 Persist</label>
-            <input name="zipFormFile" type="file" width="400" />
+            <label for="zip">Choose Zip File</label>
+            <input name="zipFormFile" type="file" style="width: 500px" />
         </div>
         <div>
-            <input type="submit" value="Submit" />
+            <input type="submit" value="Test localhost" />
         </div>
     </form>
+    <hr />
 
-    <form name="form2" method="post" enctype="multipart/form-data" action="http://localhost:5000/dev-week/upload">
-        <p>Upload test with locally hosted netcore web api</p>
-        <div>
-            <label for="zip">Zip File</label>
-            <input name="zipFormFile" type="file" width="400" />
-        </div>
-        <div>
-            <input type="submit" value="Submit" />
-        </div>
-    </form>
-
+    <p>Test organizer endpoint</p>
     <form name="form3" method="post" enctype="multipart/form-data" action="http://192.168.164.18:9000/stockExchangeDemo">
-        <p>
-            The application that we will use to test your endpoint is hosted at the following address and you may use it during development to validate your solution:
-        </p>
         <div>
             <label for="file">Zip File</label>
             <input name="file" type="file" style="width: 400px" />
         </div>
         <div>
-            <input type="submit" value="Submit Test" />
+            <input type="submit" value="Test Organizer's endpoint" />
         </div>
-    </form>    
+    </form>
+    <hr />
+
+    <p>My Azure hosted endpoint</p>
+    <form name="form3" method="post" enctype="multipart/form-data" action="https://acp-dev-week.azurewebsites.net/upload/">
+        <div>
+            <label for="zipFormFile">Browse Zip File</label>
+            <input name="zipFormFile" type="file" style="width: 600px" />
+        </div>
+        <div>
+            <input type="submit" value="Test on Azure" />
+        </div>
+    </form>
+    <hr />
+
+    <p>Multipart streaming</p>
+    <form name="form1" method="post" enctype="multipart/form-data" action="http://localhost:5000/streaming">
+        <div>
+            <label for="CurriculumVitae">Curriculum Vitae</label>
+            <!--file-model="curriculumVitae"-->
+            <input name="CurriculumVitae" type="file" />
+            <input type="submit" value="Stash the file!" />
+        </div>
+    </form>
+    <hr />
 
 </body>
 </html>

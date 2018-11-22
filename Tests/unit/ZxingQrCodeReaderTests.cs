@@ -1,4 +1,4 @@
-﻿namespace Tests
+﻿namespace Tests.Unit
 {
 using DevWeek.Algo;
 using System;
@@ -20,14 +20,14 @@ using System.Text;
         [Fact]
         public void one()
         {
-            var stringResult = zxingQrCodeReader.DecodePngFile("../../../../pics/sample-input-1.png");
+            var stringResult = zxingQrCodeReader.DecodePngFile($"../../../../pics/{FileNameTenTicks}");
             Assert.Equal(TenTicks, stringResult);
         }
 
         [Fact]
         public void two()
         {
-            var stringResult = zxingQrCodeReader.DecodePngFile("../../../../pics/sample-input-2.png");
+            var stringResult = zxingQrCodeReader.DecodePngFile($"../../../../pics/{FileNameHundredTicks}");
             Assert.Equal(OneHundredTicks, stringResult);
         }
     }

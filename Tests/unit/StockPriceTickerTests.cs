@@ -1,4 +1,4 @@
-﻿namespace Tests
+﻿namespace Tests.Unit
 {
     using DevWeek.Algo;
     using System;

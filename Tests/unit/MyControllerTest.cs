@@ -1,9 +1,5 @@
-﻿namespace Tests
+﻿namespace Tests.Unit
 {
-
-using System;
-using System.Collections.Generic;
-using System.Text;
     using WebApi.Controllers;
     using NSubstitute;
     using Xunit;
@@ -13,11 +9,10 @@ using System.Text;
     using Microsoft.AspNetCore.Mvc;
     using DevWeek.Algo;
     using static Constants;
-    using System.Linq;
 
     public class MyControllerTest
     {
-        readonly MyController myController;
+        readonly UploadController myController;
         readonly IFormFile formFile;
         readonly IUnzip unzip;
 
@@ -26,7 +21,7 @@ using System.Text;
             formFile = Substitute.For<IFormFile>();
             unzip = Substitute.For<IUnzip>();
 
-            myController = new MyController(unzip, null, null);
+            myController = new UploadController(unzip);
         }
 
         [Fact(Skip = "old")]

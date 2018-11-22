@@ -9,10 +9,16 @@
     public class Unzipper : IUnzip
     {
         readonly IRunBackgroundJob backgroundJobRunner;
+        
+        readonly IReadQrCode qrCodeReader;
 
-        public Unzipper(IRunBackgroundJob jobRunner)
+        readonly IPickStockPrice stockPricePicker;
+
+        public Unzipper(IRunBackgroundJob jobRunner, IReadQrCode readQrCode, IPickStockPrice pickStockPrice)
         {
             backgroundJobRunner = jobRunner ?? throw new ArgumentNullException(nameof(jobRunner));
+            qrCodeReader = readQrCode ?? throw new ArgumentNullException(nameof(readQrCode));
+            stockPricePicker = pickStockPrice ?? throw new ArgumentNullException(nameof(pickStockPrice));
         }
 
         public IEnumerable<(string name, long length)> GetMetadata(string fileName)
@@ -70,7 +76,9 @@
             return tasks;
         }
 
+#pragma warning disable S4457 // Parameter validation in "async"/"await" methods should be wrapped
         public async Task<List<(string, float, float)>> Process(MemoryStream zipStream)
+#pragma warning restore S4457 // Parameter validation in "async"/"await" methods should be wrapped
         {
             if (zipStream == null) throw new ArgumentNullException(nameof(zipStream));
             if (zipStream == Stream.Null) throw new ArgumentException(nameof(zipStream));
@@ -83,15 +91,14 @@
             {
                 Stream zipArchiveImageStream = entry.Open();
 
-                var task = Task.Factory.StartNew(() => 
+                Func<ProcessZipItemModel> processZipFile = () =>
                 {
-                    IReadQrCode qrCodeReader = new ZxingQrCodeReader();
                     string output = qrCodeReader.DecodePngStream(zipArchiveImageStream);
-                    IPickStockPrice stockPricePicker = new CheatingStockPricePicker();
                     var gain = stockPricePicker.GetMinMaxGain(output);
-
                     return new ProcessZipItemModel(gain.Min, gain.Max, entry.FullName, zipArchiveImageStream);
-                }, TaskCreationOptions.LongRunning);
+                };
+
+                var task = Task.Factory.StartNew(processZipFile, TaskCreationOptions.LongRunning);
 
                 tasks.Add(task);
             }
@@ -114,7 +121,6 @@
 
             return returns;
         }
-
 
     }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebApi</name>
+    </assembly>
+    <members>
+        <member name="T:WebApi.Controllers.UploadController">
+            <summary>
+            https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-2.1#uploading-small-files-with-model-binding
+            </summary>
+        </member>
+        <member name="T:WebApi.Middleware.FileUploadOperation">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>
