@@ -1,7 +1,6 @@
-﻿using WebApi.Dto;
-
-namespace WebApi.Controllers
+﻿namespace WebApi.Controllers
 {
+    using DevWeek.Algo;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Features;
     using Microsoft.AspNetCore.Mvc;
@@ -14,6 +13,7 @@ namespace WebApi.Controllers
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using WebApi.Dto;
     using WebApi.Extensions;
     using WebApi.Filters;
     using File = System.IO.File;
@@ -22,15 +22,17 @@ namespace WebApi.Controllers
     [ApiController]
     public class StreamingController : ControllerBase
     {
+        private readonly IProcessZip _zipProcessor;
         private readonly ILogger<StreamingController> _logger;
 
         // Get the default form options so that we can use them to set the default limits for
         // request body data
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
 
-        public StreamingController(ILogger<StreamingController> logger)
+        public StreamingController(IProcessZip zipProcessor, ILogger<StreamingController> logger)
         {
             _logger = logger;
+            _zipProcessor = zipProcessor;
         }
 
         [HttpGet]
@@ -57,7 +59,7 @@ namespace WebApi.Controllers
             // Used to accumulate all the form url encoded key value pairs in the 
             // request.
             var formAccumulator = new KeyValueAccumulator();
-            string targetFilePath = null;
+            UploadResponseDto dto = null;
 
             var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
             var reader = new MultipartReader(boundary, HttpContext.Request.Body);
@@ -70,24 +72,22 @@ namespace WebApi.Controllers
 
                 if (hasContentDispositionHeader)
                 {
+                    _logger.LogDebug($"{nameof(hasContentDispositionHeader)} {section.ContentDisposition}");
+
                     if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
                     {
-                        targetFilePath = Path.GetTempFileName();
-                        using (var targetStream = System.IO.File.Create(targetFilePath))
-                        {
-                            await section.Body.CopyToAsync(targetStream);
-
-                            _logger.LogInformation($"Copied the uploaded file '{targetFilePath}'");
-                        }
+                        var memoryStream = new MemoryStream();
+                        await section.Body.CopyToAsync(memoryStream);
+                        memoryStream.Seek(0, SeekOrigin.Begin);
+                        var completedTasksResponses = await _zipProcessor.ProcessAsync(memoryStream);
+                        dto = new UploadResponseDto(completedTasksResponses);
+                        memoryStream.Close();
+                        _logger.LogInformation($"File content disposition '{contentDisposition}'");
                     }
                     else if (MultipartRequestHelper.HasFormDataContentDisposition(contentDisposition))
                     {
-                        // Content-Disposition: form-data; name="key"
-                        //
-                        // value
-
-                        // Do not limit the key name length here because the 
-                        // multipart headers length limit is already in effect.
+                        // Content-Disposition: form-data; name="key"; value
+                        // Do not limit the key name length here because the multipart headers length limit is already in effect.
                         var key = HeaderUtilities.RemoveQuotes(contentDisposition.Name).Value;
                         var encoding = section.GetEncoding();
                         using (var streamReader = new StreamReader(
@@ -119,15 +119,18 @@ namespace WebApi.Controllers
             }
 
             // Bind form data to a model
-            var formValueProvider = new FormValueProvider(
-                BindingSource.Form,
-                new FormCollection(formAccumulator.GetResults()),
-                CultureInfo.CurrentCulture);
+            // InvalidOperationException: Method may only be called on a Type for which Type.IsGenericParameter is true.
 
-            var bindingSuccessful = await TryUpdateModelAsync(typeof(void), prefix: "", valueProvider: formValueProvider);
+            /*
+            var fields = formAccumulator.GetResults();
+            var formValueProvider = new FormValueProvider(BindingSource.Form, new FormCollection(fields), CultureInfo.CurrentCulture);
+            
+            var bindingSuccessful = await TryUpdateModelAsync<UploadResponseDto>(dto, prefix: "", valueProvider: formValueProvider);
             if (!bindingSuccessful && !ModelState.IsValid) return BadRequest(ModelState);
+            */
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            return new JsonResult(new { FilePath = targetFilePath });
+            return Ok(dto);
         }
         #endregion
         

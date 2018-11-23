@@ -1,11 +1,11 @@
-﻿
+﻿namespace WebApi.Extensions
+{
+
 using Microsoft.Net.Http.Headers;
 using System;
 using System.IO;
 
 
-namespace WebApi.Extensions
-{
     public static class MultipartRequestHelper
     {
         // Content-Type: multipart/form-data; boundary="----WebKitFormBoundarymx2fSWqWSd0OxQqq"

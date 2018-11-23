@@ -1,12 +1,11 @@
 ﻿namespace Tests.Unit
 {
-using DevWeek.Algo;
-using System;
-using System.Collections.Generic;
-using System.Text;
+    using DevWeek.Algo;
+    using System.Diagnostics;
+    using System.IO;
     using Xunit;
-
-    using static Constants;
+    using static Paths;
+    using static Strings;
 
     public class ZxingQrCodeReaderTests
     {
@@ -17,18 +16,35 @@ using System.Text;
             zxingQrCodeReader = new ZxingQrCodeReader();
         }
 
-        [Fact]
-        public void one()
+        [Theory]
+        [InlineData(TenTicksPng, TenTicks)]
+        [InlineData(HundredTicksPng, OneHundredTicks)]
+        [InlineData("qrcode.online.png", OneHundredTicks + " " + TenTicks)]
+        public void DecodesQRCodeToString(string fileName, string expectedString)
         {
-            var stringResult = zxingQrCodeReader.DecodePngFile($"../../../../pics/{FileNameTenTicks}");
-            Assert.Equal(TenTicks, stringResult);
+            var stringResult = zxingQrCodeReader.DecodePngFile($"{PicsFolder}{fileName}");
+            Assert.Equal(expectedString, stringResult);
         }
 
         [Fact]
-        public void two()
+        public void Performance()
         {
-            var stringResult = zxingQrCodeReader.DecodePngFile($"../../../../pics/{FileNameHundredTicks}");
-            Assert.Equal(OneHundredTicks, stringResult);
+            using (FileStream fs = File.OpenWrite("qr.csv"))
+            using (StreamWriter sw = new StreamWriter(fs))
+            {
+                sw.BaseStream.Seek(0, SeekOrigin.End);
+
+                foreach (string pngPath in Directory.GetFiles(PicsFolder, "*.png"))
+                {
+
+                    var stopwatch = Stopwatch.StartNew();
+                    var qrEncodedString = zxingQrCodeReader.DecodePngFile(pngPath);
+                    stopwatch.Stop();
+
+                    Assert.NotEmpty(qrEncodedString);
+                    sw.WriteLine($"{pngPath}, {qrEncodedString}, {stopwatch.ElapsedTicks}");
+                }
+            }
         }
     }
 }

@@ -16,6 +16,9 @@
     /// </remarks>
     public class ZxingQrCodeReader : IReadQrCode
     {
+        // create common barcode reader instance
+        static readonly Reader qrCodeReader = new QRCodeReader();
+
         public string DecodePngFile(string fileName)
         {
             if (!File.Exists(fileName))
@@ -45,9 +48,6 @@
 
         private static string GetEncodedBitmapString(Bitmap bitmap)
         {
-            // create a barcode reader instance
-            Reader qrCodeReader = new QRCodeReader();
-
             // class which represents the luminance values for a bitmap object
             LuminanceSource source = new BitmapLuminanceSource(bitmap);
 

@@ -8,18 +8,18 @@
     using System.IO;
     using Microsoft.AspNetCore.Mvc;
     using DevWeek.Algo;
-    using static Constants;
+    using static Paths;
 
     public class MyControllerTest
     {
         readonly UploadController myController;
         readonly IFormFile formFile;
-        readonly IUnzip unzip;
+        readonly IProcessZip unzip;
 
         public MyControllerTest()
         {
             formFile = Substitute.For<IFormFile>();
-            unzip = Substitute.For<IUnzip>();
+            unzip = Substitute.For<IProcessZip>();
 
             myController = new UploadController(unzip);
         }
@@ -43,14 +43,18 @@
             }           
         }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task UploadsSingleFileOk()
         {
-            using (var fs = File.OpenRead(InputsZipFileName))
+            using (var fs = File.OpenRead($"{ZipsFolder}{InputsZip}"))
             {
                 formFile.Length.Returns(fs.Length);
                 formFile.OpenReadStream().Returns(fs);
-                unzip.GetMetadata(Arg.Any<Stream>()).ReturnsForAnyArgs(new[] { (fs.Name, fs.Length) });
+                // unzip.GetMetadata(Arg.Any<Stream>()).ReturnsForAnyArgs(new[] { (fs.Name, fs.Length) });
 
                 var result = await myController.UploadSingleFile(formFile);
 

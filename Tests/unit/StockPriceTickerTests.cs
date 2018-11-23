@@ -7,7 +7,7 @@
     using System.IO;
     using System.Linq;
     using Xunit;
-    using static Constants;
+    using static Strings;
 
     public class StockPriceTickerTests
     {

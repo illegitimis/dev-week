@@ -15,9 +15,9 @@
     [ApiController]
     public class UploadController : ControllerBase
     {
-        readonly IUnzip unzipper;
+        readonly IProcessZip unzipper;
 
-        public UploadController(IUnzip unzip)
+        public UploadController(IProcessZip unzip)
         {
             unzipper = unzip ?? throw new ArgumentNullException(nameof(unzip));            
         }
@@ -33,7 +33,7 @@
             await file.CopyToAsync(memoryStream);
             memoryStream.Seek(0, SeekOrigin.Begin);
 
-            var completedTasksResponses = await unzipper.Process(memoryStream);
+            var completedTasksResponses = await unzipper.ProcessAsync(memoryStream);
             var dto = new UploadResponseDto(completedTasksResponses);
 
             memoryStream.Close();

@@ -1,5 +1,6 @@
 namespace WebApi.Dto
 {
+    using DevWeek.Algo;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -10,13 +11,13 @@ namespace WebApi.Dto
     {
         List<UploadItemResponseDto> items;
 
-        public UploadResponseDto(List<(string, float, float)> completedTasksResponses)
+        public UploadResponseDto(IList<ProcessZipItemModel> completedTasksResponses)
         {
             items = new List<UploadItemResponseDto>();
 
             foreach (var x in completedTasksResponses)
             {
-                AddItem(x.Item1, x.Item2, x.Item3);
+                AddItem(x.File, x.Min, x.Max);
             }
         }
 

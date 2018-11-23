@@ -7,15 +7,32 @@
 <body>
 
     <p>My Azure hosted endpoint</p>
-    <form name="form3" method="post" enctype="multipart/form-data" action="https://acp-dev-week.azurewebsites.net/upload/">
-        <div>
-            <label for="zipFormFile">Browse Zip File</label>
-            <input name="zipFormFile" type="file" style="width: 600px" />
-        </div>
-        <div>
-            <input type="submit" value="Test on Azure" />
-        </div>
-    </form>
+    
+    <ul>
+        <li>
+            <b>upload</b>
+            <form name="form3" method="post" enctype="multipart/form-data" action="https://acp-dev-week.azurewebsites.net/upload/">
+                <div>
+                    <label for="file">File</label>
+                    <input name="file" type="file" style="width: 600px" />
+                    <input type="submit" value="IFormFile upload" />
+                </div>
+            </form>
+        </li>
+        <li>
+            <b>streaming</b>
+            <form name="form3" method="post" enctype="multipart/form-data" action="https://acp-dev-week.azurewebsites.net/streaming/">
+                <div>
+                    <label for="file">File</label>
+                    <input name="file" type="file" style="width: 600px" />                
+                    <input type="submit" value="Streaming upload" />
+                </div>
+            </form>
+        </li>
+    </ul>
+    
+
+  
 
 </body>
 </html>
