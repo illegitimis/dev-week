@@ -1,0 +1,21 @@
+POST /streaming HTTP/1.1
+Host: acp-dev-week.azurewebsites.net
+cache-control: no-cache
+Postman-Token: 9900ad75-ce73-4f06-9479-42266ff40772
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+Content-Disposition: form-data; name="file"; filename="D:\GIT\acp-dev-week\dev-week\zips\x.zip
+
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+
+curl -X POST \
+  http://acp-dev-week.azurewebsites.net/streaming \
+  -H 'Postman-Token: ac9c0a7b-7eab-4cb9-a410-f23821cc3c54' \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
+  -F 'file=@D:\GIT\acp-dev-week\dev-week\zips\x.zip'
+
+

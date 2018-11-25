@@ -35,10 +35,6 @@
             _zipProcessor = zipProcessor;
         }
 
-        [HttpGet]
-        [GenerateAntiforgeryTokenCookieForAjax]
-        public IActionResult Index() => Ok("Ping");
-
         #region snippet1
         // 1. Disable the form value model binding here to take control of handling potentially large files.
         // 2. Typically antiforgery tokens are sent in request body, but since we 
