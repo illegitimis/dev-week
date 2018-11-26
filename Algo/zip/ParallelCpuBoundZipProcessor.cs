@@ -7,22 +7,17 @@
     using System.IO.Compression;
     using System.Threading.Tasks;
 
-    public sealed class ParallelCpuBoundZipProcessor : AbstractZipProcessor, IDisposable
+    public sealed class ParallelCpuBoundZipProcessor : AbstractZipProcessor
     {
-        // private readonly BlockingCollection<InternalProcessZipItemModel> q = null;
         private readonly ConcurrentBag<InternalProcessZipItemModel> q = null;
 
         public ParallelCpuBoundZipProcessor(IReadQrCode readQrCode, IPickStockPrice pickStockPrice)
             : base(readQrCode, pickStockPrice)
         {
-            //q = new BlockingCollection<InternalProcessZipItemModel>(boundedCapacity: 4);
             q = new ConcurrentBag<InternalProcessZipItemModel>();
         }
 
-        public void Dispose()
-        {
-            // q.Dispose();
-        }
+        
 
         protected override async Task<List<ProcessZipItemModel>> ProcessInternalAsync(MemoryStream zipStream)
         {
@@ -40,7 +35,6 @@
                     // PushItemToProcessingQueue
                     q.Add(new InternalProcessZipItemModel(float.NaN, float.NaN, entry.FullName, zipArchiveImageStream));
                 }
-                //q.CompleteAdding();
             });
 
 

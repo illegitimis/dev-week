@@ -27,14 +27,16 @@
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            // services.AddSingleton<IRunBackgroundJob, BackgroundJobRunner>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            // services.AddSingleton<IRunBackgroundJob, BackgroundJobRunner>();
             services.AddSingleton<IReadQrCode, ZxingQrCodeReader>();
             services.AddSingleton<IPickStockPrice, CheatingStockPricePicker>();
 
             // services.AddSingleton<IProcessZip, HangfireLikeZipProcessor>();
             // services.AddSingleton<IProcessZip, ParallelCpuBoundZipProcessor>();
             // services.AddSingleton<IProcessZip, ParallelForEachZipProcessor>();
+            // services.AddSingleton<IProcessZip, BlockingCollectionZipProcessor>();
             services.AddSingleton<IProcessZip, SequentialZipProcessor>();
         }
 
