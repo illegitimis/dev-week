@@ -18,8 +18,10 @@
             UploadResponseDto dto2 = JsonConvert.DeserializeObject<UploadResponseDto>(jsonString, new UploadResponseDtoConverter());
 
             Assert.Equal(dto.Items.Count, dto2.Items.Count);
+            
+            // TODO: equality
             // Assert.True (Enumerable.SequenceEqual(dto.Items, dto2.Items));            
             // Assert.Equal(dto, dto2);
-        }
+        }       
     }
 }
